@@ -176,6 +176,7 @@ class DB_SQLite
 				if(strtolower(substr(ltrim($alterdefs), 0, 3)) == 'add')
  				{
 					$query = $this->db->query($string);
+					$query->closeCursor();
 				}
 				else
 				{
@@ -927,6 +928,7 @@ class DB_SQLite
 	function drop_index($table, $name)
 	{
 		$this->query("ALTER TABLE {$this->table_prefix}$table DROP INDEX $name");
+		
 	}
 
 	/**
