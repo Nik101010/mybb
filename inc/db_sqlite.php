@@ -969,7 +969,7 @@ class DB_SQLite
 		}
 		else
 		{
-			$queryResult $this->query('DROP TABLE '.$table_prefix.$table);
+			$queryResult = $this->query('DROP TABLE '.$table_prefix.$table);
 			$queryResult->closeCursor();
 		}
 	}
