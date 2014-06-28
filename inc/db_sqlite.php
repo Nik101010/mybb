@@ -174,7 +174,7 @@ class DB_SQLite
 			{
 				// SQLITE 3 supports ADD Alter statements
 				if(strtolower(substr(ltrim($alterdefs), 0, 3)) == 'add')
-				{
+ 				{
 					$query = $this->db->query($string);
 				}
 				else
@@ -486,6 +486,7 @@ class DB_SQLite
 		{
 			$tables[] = $table['tbl_name'];
 		}
+		$query->closeCursor();
 		return $tables;
 	}
 
@@ -499,7 +500,8 @@ class DB_SQLite
 	{
 		$query = $this->query("SELECT COUNT(name) as count FROM sqlite_master WHERE type='table' AND name='{$this->table_prefix}{$table}'");
 		$exists = $this->fetch_field($query, "count");
-
+		$query->closeCursor();
+		
 		if($exists > 0)
 		{
 			return true;
@@ -832,7 +834,11 @@ class DB_SQLite
 		$query = $this->simple_select("sqlite_master", "sql", "type = 'table' AND name = '{$this->table_prefix}{$table}' ORDER BY type DESC, name");
 		$this->set_table_prefix($old_tbl_prefix);
 
-		return $this->fetch_field($query, 'sql');
+		$return = $this->fetch_field($query, 'sql');
+		
+		$query->closeCursor();
+		
+		return $return;
 	}
 
 	/**
@@ -861,6 +867,7 @@ class DB_SQLite
 			$field_info[] = array('Extra' => $entities[1], 'Field' => $column_name);
 		}
 
+		$query->closeCursor();
 		return $field_info;
 	}
 
@@ -1119,6 +1126,7 @@ class DB_SQLite
 			if($this->num_rows($result) > 0)
 			{
 				$row = $this->fetch_array($result); // Table sql
+				$result->closeCursor();
 				$tmpname = 't'.TIME_NOW;
 				$origsql = trim(preg_replace("/[\s]+/", " ", str_replace(",", ", ", preg_replace("/[\(]/","( ", $row['sql'], 1))));
 				$createtemptableSQL = 'CREATE TEMPORARY '.substr(trim(preg_replace("'".$table."'", $tmpname, $origsql, 1)), 6);
