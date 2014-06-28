@@ -215,6 +215,7 @@ class DB_SQLite
 		{
 			$this->explain_query($string, $query_time);
 		}
+		
 		return $query;
 	}
 
@@ -270,7 +271,15 @@ class DB_SQLite
 	 */
 	function write_query($query, $hide_errors=0)
 	{
-		return $this->query($query, $hide_errors);
+		$result = $this->query($query, $hide_errors);
+		
+		if(strtolower(substr(ltrim($string), 0, 6)) == 'create')
+		{
+			$result->closeCursor();
+			return;
+		}
+		
+		return $result;
 	}
 
 	/**
