@@ -928,7 +928,6 @@ class DB_SQLite
 	function drop_index($table, $name)
 	{
 		$this->query("ALTER TABLE {$this->table_prefix}$table DROP INDEX $name");
-		
 	}
 
 	/**
@@ -964,12 +963,14 @@ class DB_SQLite
 		{
 			if($this->table_exists($table))
 			{
-				$this->query('DROP TABLE '.$table_prefix.$table);
+				$queryResult = $this->query('DROP TABLE '.$table_prefix.$table);
+				$queryResult->closeCursor();
 			}
 		}
 		else
 		{
-			$this->query('DROP TABLE '.$table_prefix.$table);
+			$queryResult $this->query('DROP TABLE '.$table_prefix.$table);
+			$queryResult->closeCursor();
 		}
 	}
 
